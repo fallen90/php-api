@@ -26,6 +26,7 @@ class Model {
                         'user_values' => $user_values
                     ]
                 ]);
+
             }
         } catch (Exception $e) {
            Response::json_response([
@@ -69,10 +70,13 @@ class Model {
     public function add(){
         $request = new Request();
         if($request->server->request_method == "POST" && count(json_decode(json_encode($request->post),true)) < 1){
-            Response::error_response("No fields recieved");
+            Response::error_response("No fields recieved on add request");
         } else if($request->server->request_method == "POST"){
-            if($this->database->insert($this->model_name, json_decode(json_encode($request->post),true))->insert_id){
-                Response::success_response(ucwords(rtrim($this->model_name, "s")) . " added!");
+            if(($id = $this->database->insert($this->model_name, json_decode(json_encode($request->post),true))->insert_id)){
+                Response::json_response([
+                        "status_msg" => ucwords(rtrim($this->model_name, "s")) . " added!",
+                        rtrim($this->model_name, "s") . "_id" => $id
+                    ]);
             } else {
                 Response::error_response("Failed to add " . ucwords(rtrim($this->model_name,"s")));
             }
@@ -83,9 +87,9 @@ class Model {
     public function edit(){
         $request = new Request();
         if($request->server->request_method == "POST" && count(json_decode(json_encode($request->post),true)) < 1){
-            Response::error_response("No fields recieved");
+            Response::error_response("No fields recieved on update request");
         } else if($request->server->request_method == "POST"){
-            if(true){
+            if($this->database->update_by_id($this->model_name, json_decode(json_encode($request->post),true))){
                 Response::success_response(ucwords(rtrim($this->model_name, "s")) . " updated!");
             } else {
                 Response::error_response("Failed to update " . ucwords(rtrim($this->model_name,"s")));

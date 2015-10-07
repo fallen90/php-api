@@ -38,6 +38,13 @@
             foreach($arr as $k=>$r){
                 if($k == "filters" && $r != ""){
                    $this->set_filters($type, $r);
+                } else if($k == 'action' && $r != ""){
+                    $action = explode("/",$r);
+                    $this->{$type}->action = $r;
+                    $this->model = $action[0];
+                    $this->method = (isset($action[2])) ? $action[2] : $action[1];
+                    $this->item = (count($action) == 3) ? $action[1] : null;
+                    $this->post->{rtrim($this->model,'s') . '_id'} = ($this->item != null) ? $this->item : null;
                 } else {
                     $this->{$type}->{strtolower($k)} = rtrim($r,"/");
                 }

@@ -42,7 +42,7 @@ class Api extends Handler {
                     }
                 } else {
                     if(isset($arg) && count($arg) == 1){
-                        Response::json_response($model->item($arg[0]));
+                        Response::json_response($model->item( (!is_array($arg)) ? $arg : $arg[0] ));
                     } elseif(isset($arg) && count($arg) > 1) {
                         if(!method_exists($model, $arg[1])){
                             Response::error_response("'"  . $arg[1] .  "' doesn't exists");
@@ -59,28 +59,14 @@ class Api extends Handler {
             }
             exit(0);
         } else if($request->type == "post"){
-            //get model name
-           $action_str = trim($request->get->action,"/");
-           if(strpos($action_str, "/")){
-                $action = explode("/", $action_str);
-                if(count($action) >= 2){
-                    $t = ["model" => $action[0], "method" => $action[1] ];
-                    //create model
-                    $model = new Model($t['model']);
-                    if($model != null){
-                        if(method_exists($model, $t['method'])){
-                            if(count($request->post) >= 1){
-                                $model->{$t['method']}();
-                            } 
-                        } else {
-                            Response::json_response([
-                                    "status" => 1,
-                                    "status_msg" => "Method '$t[method]' doesnt exists"
-                                ]);
-                        }
-                    } 
+            $model = new Model($request->model);
+            if($model != null){
+                if($request->item != ""){
+                    print_r($request->post);
+                } else {
+                    echo "Fuck all";
                 }
-           }
+            }
         } else {
             $this->index();
         }
