@@ -96,7 +96,7 @@ class Model {
         } else {
             Response::error_response("Wrong method/data type for request.");
         }
-    }
+    } 
     public function delete(){
        //this removes item from model and database
         $this->database->delete($this->model_name, rtrim($this->model_name, 's') . '_id', $key);
