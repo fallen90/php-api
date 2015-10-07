@@ -54,10 +54,10 @@ class Database extends Handler {
         $this->query($sql);
     }
     public function update_by_id($table, $values){
-        // $id_ref = rtrim($table, 's') . "_id";
-        // $id_val = $values[$id_ref];
-        // $this->update($table, $values, "WHERE `$id_ref` = '$id_val'");
-        return false;
+        $id_ref = rtrim($table, 's') . "_id";
+        $id_val = $values[$id_ref];
+        $this->update($table, $values, "WHERE `$id_ref` = '$id_val'");
+        return true;
     }
     public function select($table, $fields, $where = "", $multiple = true)
     {
