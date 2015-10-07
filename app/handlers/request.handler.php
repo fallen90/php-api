@@ -16,7 +16,9 @@
             if(isset($_POST) && count($_POST) >= 1) {
                 $this->set_props("post",$_POST);
                 $this->type = "post";
-            } 
+            }
+            $this->set_props("server",$_SERVER);
+
         }
         public function __get($name){
             if(isset($this->{$name})){
@@ -37,7 +39,7 @@
                 if($k == "filters" && $r != ""){
                    $this->set_filters($type, $r);
                 } else {
-                    $this->{$type}->{$k} = rtrim($r,"/");
+                    $this->{$type}->{strtolower($k)} = rtrim($r,"/");
                 }
             }
         }

@@ -69,30 +69,30 @@ class Model {
     //crud-----------
     public function add(){
         $request = new Request();
-        if($request->type == "post"){
+        if($request->server->request_method == "POST" && count(json_decode(json_encode($request->post),true)) < 1){
+            Response::error_response("No fields recieved");
+        } else if($request->server->request_method == "POST"){
             //add 
             if($this->database->insert($this->model_name, json_decode(json_encode($request->post),true))->insert_id){
                 Response::success_response(ucwords(rtrim($this->model_name, "s")) . " added!");
             } else {
                 Response::error_response("Failed to add " . ucwords(rtrim($this->model_name,"s")));
             }
-        } else if($request->type == "get" && count($request->post) <= 1){
-            Response::error_response("No fields recieved");
         } else {
             Response::error_response("Wrong method/data type for request.");
         }
     }
     public function edit(){
         $request = new Request();
-        if($request->type == "post"){
+        if($request->server->request_method == "POST" && count(json_decode(json_encode($request->post),true)) < 1){
+            Response::error_response("No fields recieved");
+        } else if($request->server->request_method == "POST"){
             //add 
             if(true){
-                Response::success_response(ucwords(rtrim($this->model_name, "s")) . " added!");
+                Response::success_response(ucwords(rtrim($this->model_name, "s")) . " updated!");
             } else {
-                Response::error_response("Failed to add " . ucwords(rtrim($this->model_name,"s")));
+                Response::error_response("Failed to update " . ucwords(rtrim($this->model_name,"s")));
             }
-        } else if($request->type == "get" && count($request->post) <= 1){
-            Response::error_response("No fields recieved");
         } else {
             Response::error_response("Wrong method/data type for request.");
         }
