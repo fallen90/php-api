@@ -57,6 +57,7 @@ class Database extends Handler {
         // $id_ref = rtrim($table, 's') . "_id";
         // $id_val = $values[$id_ref];
         // $this->update($table, $values, "WHERE `$id_ref` = '$id_val'");
+        return false;
     }
     public function select($table, $fields, $where = "", $multiple = true)
     {

@@ -61,10 +61,10 @@ class Api extends Handler {
         } else if($request->type == "post"){
             $model = new Model($request->model);
             if($model != null){
-                if($request->item != ""){
-                    print_r($request->post);
+                if(method_exists($model, $request->method)){
+                    $model->{$request->method}();
                 } else {
-                    echo "Fuck all";
+                    Response::error_response($request->method . ' not found on method list');
                 }
             }
         } else {

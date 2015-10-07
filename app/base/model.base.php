@@ -86,13 +86,20 @@ class Model {
     }
     public function edit(){
         $request = new Request();
-        if($request->server->request_method == "POST" && count(json_decode(json_encode($request->post),true)) < 1){
+        if($request->server->request_method == "POST" && count(json_decode(json_encode($request->post),true)) == 1){
+            //id only. ids are pre generated
             Response::error_response("No fields recieved on update request");
-        } else if($request->server->request_method == "POST"){
+        } else if($request->server->request_method == "POST" && count(json_decode(json_encode($request->post),true)) > 1){
             if($this->database->update_by_id($this->model_name, json_decode(json_encode($request->post),true))){
-                Response::success_response(ucwords(rtrim($this->model_name, "s")) . " updated!");
+                Response::json_response([
+                        'status_msg' => ucwords(rtrim($this->model_name, "s")) . " updated!",
+                        rtrim($this->model_name, "s") . "_id" => $request->item
+                    ]);
             } else {
-                Response::error_response("Failed to update " . ucwords(rtrim($this->model_name,"s")));
+                 Response::json_response([
+                        'status_msg' => "Failed to update " . ucwords(rtrim($this->model_name,"s")),
+                        rtrim($this->model_name, "s") . "_id" => $request->item
+                    ]);
             }
         } else {
             Response::error_response("Wrong method/data type for request.");
