@@ -16,7 +16,6 @@ class Model {
                         $this->{$value['Field']} = null;
                     }
                 }
-                //get all 
                 $this->data = $this->database->select($this->model_name,"*");
             } else {
                 Response::json_response([
@@ -72,7 +71,6 @@ class Model {
         if($request->server->request_method == "POST" && count(json_decode(json_encode($request->post),true)) < 1){
             Response::error_response("No fields recieved");
         } else if($request->server->request_method == "POST"){
-            //add 
             if($this->database->insert($this->model_name, json_decode(json_encode($request->post),true))->insert_id){
                 Response::success_response(ucwords(rtrim($this->model_name, "s")) . " added!");
             } else {
@@ -87,7 +85,6 @@ class Model {
         if($request->server->request_method == "POST" && count(json_decode(json_encode($request->post),true)) < 1){
             Response::error_response("No fields recieved");
         } else if($request->server->request_method == "POST"){
-            //add 
             if(true){
                 Response::success_response(ucwords(rtrim($this->model_name, "s")) . " updated!");
             } else {
@@ -98,7 +95,6 @@ class Model {
         }
     } 
     public function delete(){
-       //this removes item from model and database
         $this->database->delete($this->model_name, rtrim($this->model_name, 's') . '_id', $key);
         return [
             'status' =>0,
@@ -106,7 +102,6 @@ class Model {
         ];
     }
     public function all(){
-        //presentation 
         $item_r = [];
         $model = rtrim($this->model_name,"s") . "_";
         foreach($this->data as $k=>$dat){
@@ -124,7 +119,6 @@ class Model {
             }
         }
         if($item != null){
-            //presentation 
             $item_r = [];
             $model = rtrim($this->model_name,"s") . "_";
             foreach($item as $key=>$value){
