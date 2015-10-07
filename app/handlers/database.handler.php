@@ -86,4 +86,12 @@ class Database extends Handler {
         }
         return $columns;
     }
+    public function show_tables(){
+        $tables = $this->query("SHOW TABLES;");
+        $tbls = [];
+        foreach($tables as $tbl){
+            $tbls[] = $tbl['Tables_in_' . DB];
+        }
+        return $tbls;
+    }
 }

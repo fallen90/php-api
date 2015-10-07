@@ -1,0 +1,55 @@
+#!/usr/bin/php
+<?php
+    include_once "app/autoload.php";
+
+    echo "Generating files...";
+
+    $db = new Database();
+    
+    $tables = $db->show_tables();
+
+    foreach($tables as $table){
+        $columns = $db->show_columns($table);
+        $meta_cols = [];
+        print_r($columns);
+        foreach($columns as $col){
+            $meta_cols[] = [
+                "column_name" => $col['Field'],
+                "column_type" => (isset($col['Key']) && $col['Key']  != null) ? "primary" : get_type($col['Type']),
+                "required" => (isset($col['Key']) && $col['Key']  != null) ? false : true,
+                "is_nullable" => get_value($col['Null'])
+            ];
+        }
+        file_put_contents(".meta/" . $table . ".meta.json", json_encode($meta_cols));
+    }
+    function get_value($isNull){
+        $isNull = strtolower($isNull);
+        switch($isNull){
+            case strpos($isNull, "no"):
+                return false;
+            break;
+            default :
+                return true;
+            break;
+        }
+    }
+    function get_type($type){
+        switch($type){
+            case strpos($type, "varchar"):
+                return "string";
+            break;
+            case strpos($type, "longtext"):
+                return "string";
+            break;
+            case strpos($type, "text"):
+                return "string";
+            break;
+            case strpos($type, "datetime"):
+                return "date";
+            break;
+            default :
+                return "integer";
+            break;
+        }
+    }
+?>

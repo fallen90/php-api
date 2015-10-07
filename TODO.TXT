@@ -11,3 +11,4 @@ $t->method_name(arg1, arg2, arg3);
 TODO
 Add model required fields next.
 Add value checking if values have duplicates
+ADd column max lenght on meta json
