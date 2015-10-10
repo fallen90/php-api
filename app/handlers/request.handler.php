@@ -39,11 +39,13 @@
                 if($k == "filters" && $r != ""){
                    $this->set_filters($type, $r);
                 } else if($k == 'action' && $r != ""){
+                    $r = rtrim($r, "/");
                     $action = explode("/",$r);
+                    // print_r($action);
                     $this->{$type}->action = $r;
                     $this->model = $action[0];
-                    $this->method = (isset($action[2])) ? $action[2] : $action[1];
-                    $this->item = (count($action) == 3) ? $action[1] : null;
+                    $this->item = (isset($action[2])) ? $action[2] : (isset($action[1])) ? $action[1] : null;
+                    $this->method = (isset($action[2])) ? $action[2] : (isset($action[1]) && count($action) > 2) ? $action[2] : null;
                     $this->post->{rtrim($this->model,'s') . '_id'} = ($this->item != null) ? $this->item : null;
                 } else {
                     $this->{$type}->{strtolower($k)} = rtrim($r,"/");

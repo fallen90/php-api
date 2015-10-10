@@ -4,16 +4,18 @@ class Model {
     private $data = [];
     private $model_name = "";
     private $database;
+    private $meta;
     public function __construct($model_name, $user_values = []){
          $this->database = new Database();
         $this->model_name = strtolower($model_name);
         try {
-            if( ($this->columns = $this->database->show_columns($this->model_name)) ) {
-                foreach($this->columns as $key=>$value){
+            $this->meta = new Meta($this->model_name);
+            if( ($this->columns = $this->meta->fields) ) {
+                foreach($this->columns as $value){
                     if(count($user_values) >= 1) {
-                        $this->{$value['Field']} = isset($user_values[$value['Field']]) ? $user_values[$value['Field']] : null;
+                        $this->{$value} = isset($user_values[$value]) ? $user_values[$value] : null;
                     } else {
-                        $this->{$value['Field']} = null;
+                        $this->{$value} = null;
                     }
                 }
                 $this->data = $this->database->select($this->model_name,"*");
@@ -69,6 +71,7 @@ class Model {
     //crud-----------
     public function add(){
         $request = new Request();
+        print_r($request);
         if($request->server->request_method == "POST" && count(json_decode(json_encode($request->post),true)) < 1){
             Response::error_response("No fields recieved on add request");
         } else if($request->server->request_method == "POST"){
@@ -105,7 +108,7 @@ class Model {
             Response::error_response("Wrong method/data type for request.");
         }
     } 
-    public function delete(){
+    public function delete($key){
         $this->database->delete($this->model_name, rtrim($this->model_name, 's') . '_id', $key);
         return [
             'status' =>0,
