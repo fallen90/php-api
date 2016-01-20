@@ -53,10 +53,12 @@ class Autoloader {
         ob_get_clean();
         header("Content-Type: application/json");
         Response::json_response([
+            "status" => "1",
+            "status_msg" => "error",
             "error_type" => $code,
             "error_message" => $string,
             "file_name" => $file,
-            "line_" => $line,
+            "line_number" => $line,
             "context" => $context
           ]);
         exit();

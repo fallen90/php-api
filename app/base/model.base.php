@@ -71,7 +71,7 @@ class Model {
     //crud-----------
     public function add(){
         $request = new Request();
-        print_r($request);
+        // print_r($request);
         if($request->server->request_method == "POST" && count(json_decode(json_encode($request->post),true)) < 1){
             Response::error_response("No fields recieved on add request");
         } else if($request->server->request_method == "POST"){
