@@ -6,7 +6,7 @@ class Model {
     private $database;
     private $meta;
     public function __construct($model_name, $user_values = []){
-         $this->database = new Database();
+           $this->database = new Database();
         $this->model_name = strtolower($model_name);
         try {
             $this->meta = new Meta($this->model_name);
@@ -67,6 +67,21 @@ class Model {
         $props = get_object_vars($this);
         unset($props['columns']);
         return $props;
+    }
+    public function login(){
+       $request = new Request();
+        // print_r($request);
+       if($this->model_name == "users" && $request->server->request_method == "POST"){
+          foreach($this->data as $user){
+              if($user['user_pass']==$request->post->user_pass && $user['user_name']==$request->post->user_name){
+                  Response::success_response("login successful");
+              } else {
+                  Response::error_response("login failed");
+              }
+          }
+       } else {
+           Response::error_response("failed to acknowledge action");
+       }
     }
     //crud-----------
     public function add(){
