@@ -1,7 +1,10 @@
 <?php
 
-class Login extends Api {
+class Login extends Controller {
+	public function __construct(){
+    	parent::__construct();
+	}
     public function index(){
-        Response::json_response($request->get);
+        Response::json_response($this->request->get);
     }   
 }

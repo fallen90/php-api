@@ -47,6 +47,9 @@
             case strpos($type, "datetime"):
                 return "date";
             break;
+            case strpos($type, "timestamp"):
+                return "timestamp"
+            break;
             default :
                 return "integer";
             break;

@@ -68,29 +68,54 @@ class Model {
         unset($props['columns']);
         return $props;
     }
+    public function filter(){
+        $request = json_decode(json_encode(new Request()),true);
+        $filters = array_splice($request['get'], 1);
+        $data = $this->data;
+        $ret = [];
+        foreach($data as $row){
+            $key = array_keys($filters)[0];
+            if($row[$key] == $filters[$key]){
+                $ret[] = $row;
+            }
+        }
+        Response::json_response([
+                $this->model_name => $ret
+            ]);
+    }
     public function login(){
        $request = new Request();
-        // print_r($request);
        if($this->model_name == "users" && $request->server->request_method == "POST"){
+          $isLoggedin = false;
           foreach($this->data as $user){
               if($user['user_pass']==$request->post->user_pass && $user['user_name']==$request->post->user_name){
-                  Response::success_response("login successful");
-              } else {
-                  Response::error_response("login failed");
-              }
+                $isLoggedin = true;
+                Response::json_response([
+                        "status_msg" => "login successful",
+                        "user_info" => $user
+                    ]);
+              } 
+          }
+          if(!$isLoggedin){
+            Response::error_response("login failed");
           }
        } else {
            Response::error_response("failed to acknowledge action");
        }
     }
     //crud-----------
+    //alias
+    public function signup(){
+        $this->add();
+    }
     public function add(){
-
         //add mechanism for checking meta
         $request = new Request();
         $recv_fields = json_decode(json_encode($request->post),true);
         $recv_fields = array_splice($recv_fields, 1);
 
+        Log::create($request);
+        
         // print_r($request);
         if($request->server->request_method == "POST" && count($recv_fields) < 1){
             Response::error_response("No fields recieved on add request");
@@ -98,23 +123,31 @@ class Model {
             //check for duplicates
             if(count($recv_fields) >= count($this->meta->required_fields)){
                 //check for duplicates\
-                $no_duplicates = false;
-                foreach($this->data as $row){
-                    $user_id = $row[rtrim($this->model_name,"s") . '_id'];
-                    unset($row[rtrim($this->model_name,"s") . '_id']);
-                    if($row == $recv_fields){
-                        $row['user_id'] = $user_id;
-                        Response::json_response([
-                                "status" => 1,
-                                "status_msg" => "User already existed",
-                                "user" => $row
-                            ]);
-                        exit();
-                    } else {
-                        $no_duplicates = true;
-                    }
-                }
-                if($no_duplicates){
+                // $no_duplicates = false;
+                // foreach($this->data as $row){
+                //     $user_id = $row[rtrim($this->model_name,"s") . '_id'];
+                //     unset($row[rtrim($this->model_name,"s") . '_id']);
+                //     $duplicate_fields = 0;
+                //     foreach($row as $key=>$r){
+                //         if($recv_fields[$key] == $r){
+                //             $duplicate_fields ++;
+                //         }
+                //     }
+                //     //     $row['user_id'] = $user_id;
+                //             //     Response::json_response([
+                //             //             "status" => 1,
+                //             //             "status_msg" => "User already existed",
+                //             //             "user" => $row
+                //             //         ]);
+                //             //     exit();
+                //     // if($row == $recv_fields){
+                    
+                //     // } else {
+                //     //     $no_duplicates = true;
+                //     // }
+                // }
+                // echo $no_duplicates;
+                if(true){
                     $id = $this->database->insert($this->model_name, json_decode(json_encode($request->post),true))->insert_id;
                     if($id){
                         Response::json_response([
@@ -132,6 +165,10 @@ class Model {
         } else {
             Response::error_response("Wrong method/data type for request.");
         }
+        
+    }
+    public function update(){
+        $this->edit();
     }
     public function edit(){
         $request = new Request();
@@ -154,6 +191,9 @@ class Model {
             Response::error_response("Wrong method/data type for request.");
         }
     } 
+    public function remove($key){
+        $this->delete($key);
+    }
     public function delete($key){
         $this->database->delete($this->model_name, rtrim($this->model_name, 's') . '_id', $key);
         return [

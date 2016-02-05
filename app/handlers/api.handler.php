@@ -20,18 +20,37 @@ class Api extends Handler {
                 }
             }
 
-            if(class_exists($action = ucwords($action))){ //it's a class
-                if(isset($method) && $method != ""){ // and method is present
-                    if(method_exists($action = new $action(), $method)){ //and existing
-                        $action->{$method}();
+            // if(class_exists($action = ucwords($action))){ //it's a class
+            //     echo "fucky";
+            //     if(isset($method) && $method != ""){ // and method is present
+            //         if(method_exists($action = new $action(), $method)){ //and existing
+            //             $action->{$method}();
+            //         } else {
+            //             Response::error_response("The method '"  . $method .  "' of class '" . get_class($action) . "' doesn't exists or not implemented");
+            //         }
+            //     } else { //else, run default
+            //         $action = new $action();
+            //         $action->index();
+            //     }
+            // } 
+
+            if(class_exists($action =  ucwords($action))){
+
+                $obj = new $action();
+
+                if(isset($method) && $method != ""){
+                    if(method_exists($obj, $method)){
+                        $obj->{$method}();
                     } else {
-                        Response::error_response("The method '"  . $method .  "' of class '" . get_class($action) . "' doesn't exists or not implemented");
+                        Response::error_response("The method '"  . $method .  "' of class '" . get_class($obj) . "' doesn't exists or not implemented");
                     }
-                } else { //else, run default
-                    $action = new $action();
-                    $action->index();
+                } else {
+                    $obj->index();
                 }
-            } else if(method_exists($this, $action)){ // else it's a method only (bultin)
+                exit();
+            }
+            
+            if(method_exists($this, $action)){ // else it's a method only (bultin)
                 $this->{$action}();
             } else if( ($model = new Model($action)) != null){ //or can be generated model
                 if(isset($method)){
