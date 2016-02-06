@@ -1,12 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.11
+-- version 4.5.1
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 11, 2015 at 02:29 AM
--- Server version: 5.6.21
--- PHP Version: 5.5.19
+-- Generation Time: Feb 05, 2016 at 03:25 PM
+-- Server version: 10.1.9-MariaDB
+-- PHP Version: 5.6.15
 
+SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
@@ -14,153 +15,170 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `sts`
 --
+CREATE DATABASE IF NOT EXISTS `sts` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `sts`;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `accesstypes`
+-- Table structure for table `options`
 --
 
-CREATE TABLE IF NOT EXISTS `accesstypes` (
-`accesstype_id` int(11) NOT NULL,
-  `accesstype_description` varchar(50) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+DROP TABLE IF EXISTS `options`;
+CREATE TABLE IF NOT EXISTS `options` (
+  `option_id` int(11) NOT NULL AUTO_INCREMENT,
+  `question_id` int(11) NOT NULL,
+  `option_body` text NOT NULL,
+  PRIMARY KEY (`option_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `accesstypes`
+-- Dumping data for table `options`
 --
 
-INSERT INTO `accesstypes` (`accesstype_id`, `accesstype_description`) VALUES
-(1, 'Admin'),
-(2, 'Edit'),
-(3, 'View');
+INSERT INTO `options` (`option_id`, `question_id`, `option_body`) VALUES
+(1, 1, '2'),
+(2, 1, '4'),
+(3, 1, '523'),
+(4, 1, '35'),
+(5, 2, 'asfasfasfasfasf'),
+(6, 2, 'sdfasgasgasg'),
+(7, 2, 'asfasfasfasf');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `enrollments`
+-- Table structure for table `questions`
 --
 
-CREATE TABLE IF NOT EXISTS `enrollments` (
-`enrollment_id` int(11) NOT NULL,
-  `student_id` int(11) NOT NULL,
-  `schoolyear_id` int(11) NOT NULL,
-  `grade_id` int(11) NOT NULL,
-  `section_id` int(11) NOT NULL,
-  `enrollment_tuition` decimal(19,4) NOT NULL,
-  `enrollment_misc` decimal(19,4) NOT NULL,
-  `enrollment_discount` decimal(19,4) NOT NULL,
-  `enrollment_deduction` decimal(19,4) NOT NULL,
-  `enrollment_runningbal` decimal(19,4) NOT NULL,
-  `enrollment_date` date NOT NULL,
-  `paymentterm_key` int(11) NOT NULL,
-  `enrollment_tuitionbal` decimal(19,4) NOT NULL,
-  `enrollment_miscbal` decimal(19,4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+DROP TABLE IF EXISTS `questions`;
+CREATE TABLE IF NOT EXISTS `questions` (
+  `question_id` int(11) NOT NULL AUTO_INCREMENT,
+  `quiz_id` int(11) NOT NULL,
+  `option_id` int(11) NOT NULL,
+  `question_body` text NOT NULL,
+  `question_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`question_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `questions`
+--
+
+INSERT INTO `questions` (`question_id`, `quiz_id`, `option_id`, `question_body`, `question_timestamp`) VALUES
+(1, 1, 1, '1+1=?', '2016-01-26 16:00:00'),
+(2, 1, 5, 'asfasf asf as fas fafs a', '2016-01-27 05:20:05');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fees`
+-- Table structure for table `quizes`
 --
 
-CREATE TABLE IF NOT EXISTS `fees` (
-`fee_id` int(11) NOT NULL,
-  `schoolyear_id` int(11) NOT NULL,
-  `grade_id` int(11) NOT NULL,
-  `paymentterm_id` int(11) NOT NULL DEFAULT '1',
-  `fee_tuition` decimal(19,4) NOT NULL,
-  `fee_misc` decimal(19,4) NOT NULL,
-  `fee_computer` decimal(19,4) NOT NULL,
-  `fee_others` decimal(19,4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+DROP TABLE IF EXISTS `quizes`;
+CREATE TABLE IF NOT EXISTS `quizes` (
+  `quiz_id` int(11) NOT NULL AUTO_INCREMENT,
+  `quiz_set` varchar(50) NOT NULL,
+  `quiz_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`quiz_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `quizes`
+--
+
+INSERT INTO `quizes` (`quiz_id`, `quiz_set`, `quiz_timestamp`) VALUES
+(1, 'SET_A', '2016-01-27 05:14:08');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `grades`
+-- Stand-in structure for view `quiz_list`
 --
-
-CREATE TABLE IF NOT EXISTS `grades` (
-`grade_id` int(11) NOT NULL,
-  `grade_description` varchar(50) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `grades`
---
-
-INSERT INTO `grades` (`grade_id`, `grade_description`) VALUES
-(1, '1'),
-(2, '2'),
-(3, '3'),
-(4, '4'),
-(5, '5'),
-(6, '6'),
-(7, '7'),
-(8, '8'),
-(9, '9'),
-(10, '10'),
-(11, '11'),
-(12, '12'),
-(13, 'Nursery'),
-(14, 'Kinder 1'),
-(15, 'Kinder 2'),
-(16, 'something would suffice herexxxxxxxxxx'),
-(17, ''),
-(18, ''),
-(19, 'something would suffice herexxxxxxxxxx'),
-(20, 'something would suffice here'),
-(21, 'something would suffice here'),
-(22, 'something would suffice here'),
-(23, 'something would suffice here'),
-(24, 'something would suffice here'),
-(26, 'something would suffice here'),
-(27, 'something would suffice here'),
-(28, 'something would suffice here'),
-(29, 'something would suffice here'),
-(30, 'something would suffice here'),
-(31, 'something would suffice here'),
-(32, 'something would suffice here'),
-(33, 'something would suffice here'),
-(34, 'something would suffice here');
+DROP VIEW IF EXISTS `quiz_list`;
+CREATE TABLE IF NOT EXISTS `quiz_list` (
+`quiz_id` int(11)
+,`quiz_set` varchar(50)
+,`quiz_timestamp` timestamp
+,`question_id` int(11)
+,`question_body` text
+,`option_id` int(11)
+,`option_body` text
+);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `paymentterms`
+-- Table structure for table `scores`
 --
 
-CREATE TABLE IF NOT EXISTS `paymentterms` (
-`paymentterm_id` int(11) NOT NULL,
-  `paymentterm_description` varchar(50) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+DROP TABLE IF EXISTS `scores`;
+CREATE TABLE IF NOT EXISTS `scores` (
+  `score_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `quiz_id` int(11) NOT NULL,
+  `score_value` int(11) NOT NULL,
+  `quiz_answers` longtext NOT NULL,
+  `score_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`score_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `paymentterms`
+-- Dumping data for table `scores`
 --
 
-INSERT INTO `paymentterms` (`paymentterm_id`, `paymentterm_description`) VALUES
-(1, 'Cash'),
-(2, 'Installment'),
-(3, 'Easy');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `schoolyears`
---
-
-CREATE TABLE IF NOT EXISTS `schoolyears` (
-`schoolyear_id` int(11) NOT NULL,
-  `schoolyear_description` varchar(150) NOT NULL,
-  `schoolyear_isactive` int(11) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+INSERT INTO `scores` (`score_id`, `user_id`, `quiz_id`, `score_value`, `quiz_answers`, `score_timestamp`) VALUES
+(1, 10, 1, 220, '{}', '2016-01-27 08:04:50'),
+(2, 10, 1, 220, '{}', '2016-01-27 08:27:49'),
+(3, 10, 1, 220, '{}', '2016-01-27 08:28:32'),
+(4, 10, 1, 220, '{}', '2016-01-27 08:28:35'),
+(5, 10, 1, 220, '{}', '2016-01-27 08:28:35'),
+(6, 10, 1, 220, '{}', '2016-01-27 08:28:35'),
+(7, 10, 1, 220, '{}', '2016-01-27 08:28:35'),
+(8, 10, 1, 220, '{}', '2016-01-27 08:28:35'),
+(9, 10, 1, 220, '{}', '2016-01-27 08:28:36'),
+(10, 10, 1, 220, '{}', '2016-01-27 08:28:36'),
+(11, 10, 1, 220, '{}', '2016-01-27 08:28:36'),
+(12, 10, 1, 220, '{}', '2016-01-27 08:28:36'),
+(13, 10, 1, 220, '{}', '2016-01-27 08:28:36'),
+(14, 10, 1, 220, '{}', '2016-01-27 08:28:37'),
+(15, 10, 1, 220, '{}', '2016-01-27 08:28:37'),
+(16, 10, 1, 220, '{}', '2016-01-27 08:28:37'),
+(17, 10, 1, 220, '{}', '2016-01-27 08:28:37'),
+(18, 10, 1, 220, '{}', '2016-01-27 08:28:37'),
+(19, 10, 1, 220, '{}', '2016-01-27 08:28:38'),
+(20, 10, 1, 220, '{}', '2016-01-27 08:28:38'),
+(21, 10, 1, 220, '{}', '2016-01-27 08:28:38'),
+(22, 10, 1, 220, '{}', '2016-01-27 08:28:38'),
+(23, 10, 1, 220, '{}', '2016-01-27 08:28:38'),
+(24, 10, 1, 220, '{}', '2016-01-27 08:28:39'),
+(25, 10, 1, 220, '{}', '2016-01-27 08:28:39'),
+(26, 10, 1, 220, '{}', '2016-01-27 08:28:39'),
+(27, 10, 1, 220, '{}', '2016-01-27 08:28:40'),
+(28, 10, 1, 220, '{}', '2016-01-27 08:28:40'),
+(29, 10, 1, 220, '{}', '2016-01-27 08:28:40'),
+(30, 10, 1, 220, '{}', '2016-01-27 08:28:40'),
+(31, 10, 1, 220, '{}', '2016-01-27 08:28:40'),
+(32, 10, 1, 220, '{}', '2016-01-27 08:28:41'),
+(33, 10, 1, 220, '{}', '2016-01-28 08:56:53'),
+(34, 10, 1, 220, '{}', '2016-01-28 08:57:00'),
+(35, 0, 0, 1, '1,2', '2016-01-28 09:05:24'),
+(36, 3, 5, 1, '1,2', '2016-01-28 09:09:08'),
+(37, 3, 5, 1, '[Ljava.lang.String;@425eaa40', '2016-01-28 09:33:20'),
+(38, 3, 5, 1, 'null null', '2016-01-28 09:36:44'),
+(39, 3, 5, 1, '1 2', '2016-01-28 09:42:30'),
+(40, 3, 5, 1, '1,5', '2016-01-28 10:05:56'),
+(41, 3, 5, 0, '1,5', '2016-01-28 10:09:38'),
+(42, 3, 5, 2, '1,5', '2016-01-28 10:12:41'),
+(43, 3, 5, 1, '1,7', '2016-01-28 10:13:22'),
+(44, 10, 5, 1, '2,5', '2016-01-28 10:48:10'),
+(45, 10, 5, 2, '2,5', '2016-01-28 10:48:48'),
+(46, 10, 1, 2, '1,5', '2016-01-28 10:58:56');
 
 -- --------------------------------------------------------
 
@@ -168,120 +186,21 @@ CREATE TABLE IF NOT EXISTS `schoolyears` (
 -- Table structure for table `sections`
 --
 
+DROP TABLE IF EXISTS `sections`;
 CREATE TABLE IF NOT EXISTS `sections` (
-`section_id` int(11) NOT NULL,
-  `grade_id` int(11) NOT NULL,
-  `section_description` varchar(150) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=latin1;
+  `section_id` int(11) NOT NULL AUTO_INCREMENT,
+  `section_name` varchar(150) NOT NULL,
+  PRIMARY KEY (`section_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sections`
 --
 
-INSERT INTO `sections` (`section_id`, `grade_id`, `section_description`) VALUES
-(2, 13, 'Burgundy'),
-(3, 13, 'Chestnut'),
-(4, 13, 'Crimson'),
-(5, 14, 'Fucshia'),
-(6, 14, 'Indigo'),
-(7, 14, 'Lavander'),
-(8, 14, 'Lilac'),
-(9, 15, 'Olive'),
-(10, 15, 'Plum'),
-(11, 15, 'Purple'),
-(12, 15, 'Russet'),
-(13, 1, 'Amethyst'),
-(14, 1, 'Amber'),
-(15, 1, 'Aquamarine'),
-(16, 1, 'Agate'),
-(17, 2, 'Citrine'),
-(18, 2, 'Coral'),
-(19, 2, 'Diamond'),
-(20, 2, 'Emerald'),
-(21, 3, 'Fluorite'),
-(22, 3, 'Jade'),
-(23, 3, 'Jasper'),
-(24, 3, 'Jet'),
-(25, 4, 'Moonstone'),
-(26, 4, 'Onyx'),
-(27, 4, 'Opal'),
-(28, 4, 'Obsidian'),
-(29, 5, 'Pearl'),
-(30, 5, 'Quartz'),
-(31, 5, 'Rosequartz'),
-(32, 5, 'Ruby'),
-(33, 6, 'Sapphire'),
-(34, 6, 'Sardonyx'),
-(35, 6, 'Topaz'),
-(36, 6, 'Zircon'),
-(37, 7, 'Love'),
-(38, 7, 'Hope'),
-(39, 7, 'Wisdom'),
-(40, 7, 'Values'),
-(41, 8, 'Perseverance'),
-(42, 8, 'Respoect'),
-(43, 8, 'Courtesy'),
-(44, 8, 'Responsibility'),
-(45, 9, 'Truth'),
-(46, 9, 'Obedience'),
-(47, 9, 'Patience'),
-(48, 9, 'Generosity'),
-(49, 10, 'Honesty'),
-(50, 10, 'Loyalty'),
-(51, 10, 'Integrity'),
-(52, 10, 'Humility'),
-(53, 11, 'Harmony'),
-(54, 11, 'Equality'),
-(55, 11, 'Commitment'),
-(56, 11, 'Diplomacy'),
-(57, 12, 'Orderliness'),
-(58, 12, 'Resourcefulness'),
-(59, 12, 'Innovation'),
-(60, 12, 'Fairness');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `students`
---
-
-CREATE TABLE IF NOT EXISTS `students` (
-`student_id` int(11) NOT NULL,
-  `student_number` varchar(9) NOT NULL,
-  `student_firstname` varchar(50) NOT NULL,
-  `student_middlename` varchar(50) NOT NULL,
-  `student_lastname` varchar(50) NOT NULL,
-  `student_gender` varchar(6) NOT NULL,
-  `student_home_phone` varchar(25) NOT NULL,
-  `student_mobile_phone` varchar(25) NOT NULL,
-  `student_fax_number` varchar(25) NOT NULL,
-  `student_address` varchar(255) NOT NULL,
-  `student_city` varchar(50) NOT NULL,
-  `student_province` varchar(50) NOT NULL,
-  `student_postal` varchar(15) NOT NULL,
-  `student_notes` longtext NOT NULL,
-  `student_mother` varchar(50) NOT NULL,
-  `student_father` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `transactions`
---
-
-CREATE TABLE IF NOT EXISTS `transactions` (
-`transaction_id` int(11) NOT NULL,
-  `enrollment_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `transaction_tuition` decimal(19,4) NOT NULL,
-  `transaction_others` decimal(19,4) NOT NULL,
-  `transaction_total` decimal(19,4) NOT NULL,
-  `transaction_date` datetime NOT NULL,
-  `transaction_or_number` varchar(50) NOT NULL,
-  `transaction_ar_number` varchar(50) NOT NULL,
-  `transaction_discount` decimal(19,4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+INSERT INTO `sections` (`section_id`, `section_name`) VALUES
+(1, 'A1'),
+(3, 'A2'),
+(4, 'A3');
 
 -- --------------------------------------------------------
 
@@ -289,134 +208,40 @@ CREATE TABLE IF NOT EXISTS `transactions` (
 -- Table structure for table `users`
 --
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
-`user_id` int(11) NOT NULL,
-  `accesstype_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `section_id` int(11) NOT NULL,
+  `user_type` varchar(11) NOT NULL DEFAULT 'student',
   `user_name` varchar(32) NOT NULL,
   `user_pass` varchar(32) NOT NULL,
   `user_firstname` varchar(50) NOT NULL,
   `user_lastname` varchar(50) NOT NULL,
-  `user_isactive` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `user_isactive` int(11) NOT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `user_name` (`user_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 
 --
--- Indexes for dumped tables
+-- Dumping data for table `users`
 --
 
---
--- Indexes for table `accesstypes`
---
-ALTER TABLE `accesstypes`
- ADD PRIMARY KEY (`accesstype_id`);
+INSERT INTO `users` (`user_id`, `section_id`, `user_type`, `user_name`, `user_pass`, `user_firstname`, `user_lastname`, `user_isactive`) VALUES
+(9, 1, 'student', 'lasssst', 'lasssssst', 'lasssssst', 'lassssssst', 1),
+(10, 1, 'student', 'jasper', 'jasper', 'alskfajs', 'alkfjaslfkj', 1),
+(12, 1, 'student', 'alsfkjasfasfasffff', 'lkajsfasfasfffff', 'alskfajs', 'alkfjaslfkj', 1),
+(13, 0, 'student', 'aaaaaa', 'aaaaas', 'aaaaaa', 'aaaaaa', 1);
+
+-- --------------------------------------------------------
 
 --
--- Indexes for table `enrollments`
+-- Structure for view `quiz_list`
 --
-ALTER TABLE `enrollments`
- ADD PRIMARY KEY (`enrollment_id`);
+DROP TABLE IF EXISTS `quiz_list`;
 
---
--- Indexes for table `fees`
---
-ALTER TABLE `fees`
- ADD PRIMARY KEY (`fee_id`);
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `quiz_list`  AS  select `z`.`quiz_id` AS `quiz_id`,`z`.`quiz_set` AS `quiz_set`,`z`.`quiz_timestamp` AS `quiz_timestamp`,`q`.`question_id` AS `question_id`,`q`.`question_body` AS `question_body`,`q`.`option_id` AS `option_id`,`o`.`option_body` AS `option_body` from ((`quizes` `z` join `questions` `q` on((`q`.`quiz_id` = `z`.`quiz_id`))) join `options` `o` on((`o`.`question_id` = `q`.`question_id`))) group by `z`.`quiz_id` ;
+SET FOREIGN_KEY_CHECKS=1;
 
---
--- Indexes for table `grades`
---
-ALTER TABLE `grades`
- ADD PRIMARY KEY (`grade_id`);
-
---
--- Indexes for table `paymentterms`
---
-ALTER TABLE `paymentterms`
- ADD PRIMARY KEY (`paymentterm_id`);
-
---
--- Indexes for table `schoolyears`
---
-ALTER TABLE `schoolyears`
- ADD PRIMARY KEY (`schoolyear_id`);
-
---
--- Indexes for table `sections`
---
-ALTER TABLE `sections`
- ADD PRIMARY KEY (`section_id`);
-
---
--- Indexes for table `students`
---
-ALTER TABLE `students`
- ADD PRIMARY KEY (`student_id`);
-
---
--- Indexes for table `transactions`
---
-ALTER TABLE `transactions`
- ADD PRIMARY KEY (`transaction_id`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
- ADD PRIMARY KEY (`user_id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `accesstypes`
---
-ALTER TABLE `accesstypes`
-MODIFY `accesstype_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
---
--- AUTO_INCREMENT for table `enrollments`
---
-ALTER TABLE `enrollments`
-MODIFY `enrollment_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `fees`
---
-ALTER TABLE `fees`
-MODIFY `fee_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `grades`
---
-ALTER TABLE `grades`
-MODIFY `grade_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=35;
---
--- AUTO_INCREMENT for table `paymentterms`
---
-ALTER TABLE `paymentterms`
-MODIFY `paymentterm_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
---
--- AUTO_INCREMENT for table `schoolyears`
---
-ALTER TABLE `schoolyears`
-MODIFY `schoolyear_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `sections`
---
-ALTER TABLE `sections`
-MODIFY `section_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=61;
---
--- AUTO_INCREMENT for table `students`
---
-ALTER TABLE `students`
-MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `transactions`
---
-ALTER TABLE `transactions`
-MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
