@@ -19,6 +19,7 @@ class Database extends Handler {
     public function __destruct(){
         mysqli_close($this->conn);
     }
+    
     public function getInstance(){
         return $this->conn;
     }

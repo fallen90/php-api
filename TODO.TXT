@@ -12,3 +12,10 @@ TODO
 Add model required fields next.
 Add value checking if values have duplicates
 ADd column max lenght on meta json
+
+TODO (new) a1,
+
+add check on _isactive field
+verbose error
+add shortcut for field names when used as parameters on requests
+support other method types
