@@ -13,7 +13,7 @@ class Meta {
                 $this->get_required_fields();
                 $this->get_fields();
             } else {
-                throw new Exception(ucwords($table_name) . "'s metafile isn't existing. Please check your spelling or regenerate metafiles", 1);
+                throw new Exception(ucwords($table_name) . "'s entity definition can't be found.", 1);
             }
         } catch (Exception $ex) {
             Response::error_response($ex->getMessage());

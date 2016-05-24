@@ -18,12 +18,19 @@ spl_autoload_register('Autoloader::ControllersLoader');
 class Autoloader {
 
     private static function autoload($base, $classname){
-        $location = ['base' => "base/", 'handler' => "handlers/", 'model' => "models/", 'support' => "supports/",'controller' => "controllers/"];
+        $location = [
+                     'base' => "base/", 
+                     'handler' => "handlers/",
+                     'model' => "models/",
+                     'support' => "supports/",
+                     'controller' => "controllers/"
+                    ];
+
         $filename = dirname(__FILE__) . DIRECTORY_SEPARATOR . $location[$base] . strtolower($classname) . '.' . $base . '.php';
         if(!file_exists($filename)){
             return false;
         }
-        // echo $classname . " - >";
+
         include_once $filename;
     }
     public static function BaseLoader($classname){
@@ -52,6 +59,7 @@ class Autoloader {
     public function xhandler($code,$string,$file,$line,$context){
         ob_get_clean();
         header("Content-Type: application/json");
+        http_response_code(500);
         Response::json_response([
             "status" => "1",
             "status_msg" => "error",

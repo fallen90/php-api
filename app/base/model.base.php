@@ -86,10 +86,22 @@ class Model {
     public function login(){
        $request = new Request();
        if($this->model_name == "users" && $request->server->request_method == "POST"){
+
           $isLoggedin = false;
+
+          if(!property_exists($request->post, "user_pass") || !property_exists($request->post, "user_name")){
+            Response::json_response([
+                        "status" => 1,
+                        "status_msg" => "request payload doesn't have required fields",
+                        "data" => $_POST
+                    ]);
+            exit(1);
+          }
+
           foreach($this->data as $user){
               if($user['user_pass']==$request->post->user_pass && $user['user_name']==$request->post->user_name){
                 $isLoggedin = true;
+                //auth
                 Response::json_response([
                         "status_msg" => "login successful",
                         "user_info" => $user
